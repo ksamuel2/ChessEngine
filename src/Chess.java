@@ -10,13 +10,14 @@ public class Chess {
         int i = 0;
         SearchTree engine = new SearchTree();
         while(!chess.checkmate()) {
-            System.out.println("Current Board Position");
-            chess.printBoard();
-            System.out.println("Computer Generated Move");
-            engine.generateMovePly(chess, 3);
-            String move = scanner.nextLine();
-            if(move.equals("exit")) return;
-            chess.move(move);
+            if(i%2 == 0) {
+                chess.printBoard();
+                String move = scanner.nextLine();
+                if(move.equals("exit")) return;
+                if(chess.move(move) != 0) continue;
+            }
+            else
+                chess = new Chessboard(engine.generateMovePly(chess, 3));
             i++;
         }
         chess.printBoard();

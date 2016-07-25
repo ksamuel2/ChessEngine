@@ -6,35 +6,35 @@ public class Chessboard {
     public Chessboard() {
         board = new Piece[8][8];
         int rank = 0;
-        int color = 2;
+        int color = WHITE;
         for(int repeat = 0; repeat < 2; repeat++) {
             for (int i = 0; i < 8; i++) {
                 if (i == 0 || i == 7)
-                    board[i][rank] = new Piece(color, 4);
+                    board[i][rank] = new Piece(color, ROOK);
                 if (i == 1 || i == 6)
-                    board[i][rank] = new Piece(color, 2);
+                    board[i][rank] = new Piece(color, KNIGHT);
                 if (i == 2 || i == 5)
-                    board[i][rank] = new Piece(color, 3);
+                    board[i][rank] = new Piece(color, BISHOP);
                 if (i == 3)
-                    board[i][rank] = new Piece(color, 5);
+                    board[i][rank] = new Piece(color, QUEEN);
                 if (i == 4)
-                    board[i][rank] = new Piece(color, 6);
+                    board[i][rank] = new Piece(color, KING);
             }
-            color = 1;
+            color = BLACK;
             rank = 7;
         }
         rank = 1;
-        color = 2;
+        color = WHITE;
         for(int repeat = 0; repeat < 2; repeat++) {
             for(int i = 0; i < 8; i++) {
-                board[i][rank] = new Piece(color, 1);
+                board[i][rank] = new Piece(color, PAWN);
             }
-            color = 1;
+            color = BLACK;
             rank = 6;
         }
         for(int i = 2; i <= 5; i++) {
             for(int j = 0; j < 8; j++) {
-                board[j][i] = new Piece(0, 0);
+                board[j][i] = new Piece(EMPTY, EMPTY);
             }
         }
         whiteToMove = true;
@@ -278,64 +278,6 @@ public class Chessboard {
         }
         return available;
     }
-    private ArrayList<Coordinate> checkLateralsWithoutCheck(Coordinate origin) {
-        ArrayList<Coordinate> available = new ArrayList<Coordinate>();
-        int startX = origin.getX();
-        int startY = origin.getY();
-        Piece piece = board[startX][startY];
-        int color = piece.getColor();
-        Coordinate curr = new Coordinate(startX + 1, startY);
-        boolean nextDiagonal = false;
-        while(checkOnBoard(curr) && !nextDiagonal) {
-            if(!checkOccupied(curr)) available.add(new Coordinate(curr));
-            else {
-                if(checkTakeable(curr, color)) available.add(new Coordinate(curr));
-                nextDiagonal = true;
-            }
-            startX += 1;
-            curr.setXY(startX, startY);
-        }
-        startX = origin.getX() - 1;
-        startY = origin.getY();
-        curr.setXY(startX, startY);
-        nextDiagonal = false;
-        while(checkOnBoard(curr) && !nextDiagonal) {
-            if(!checkOccupied(curr)) available.add(new Coordinate(curr));
-            else {
-                if(checkTakeable(curr, color)) available.add(new Coordinate(curr));
-                nextDiagonal = true;
-            }
-            startX -= 1;
-            curr.setXY(startX, startY);
-        }
-        startX = origin.getX();
-        startY = origin.getY() - 1;
-        curr.setXY(startX, startY);
-        nextDiagonal = false;
-        while(checkOnBoard(curr) && !nextDiagonal) {
-            if(!checkOccupied(curr)) available.add(new Coordinate(curr));
-            else {
-                if(checkTakeable(curr, color)) available.add(new Coordinate(curr));
-                nextDiagonal = true;
-            }
-            startY -= 1;
-            curr.setXY(startX, startY);
-        }
-        startX = origin.getX();
-        startY = origin.getY() + 1;
-        curr.setXY(startX, startY);
-        nextDiagonal = false;
-        while(checkOnBoard(curr) && !nextDiagonal) {
-            if(!checkOccupied(curr)) available.add(new Coordinate(curr));
-            else {
-                if(checkTakeable(curr, color)) available.add(new Coordinate(curr));
-                nextDiagonal = true;
-            }
-            startY += 1;
-            curr.setXY(startX, startY);
-        }
-        return available;
-    }
     private ArrayList<Coordinate> checkLaterals(Coordinate origin) {
         ArrayList<Coordinate> available = new ArrayList<Coordinate>();
         int startX = origin.getX();
@@ -394,20 +336,78 @@ public class Chessboard {
         }
         return available;
     }
+    private ArrayList<Coordinate> checkLateralsWithoutCheck(Coordinate origin) {
+        ArrayList<Coordinate> available = new ArrayList<Coordinate>();
+        int startX = origin.getX();
+        int startY = origin.getY();
+        Piece piece = board[startX][startY];
+        int color = piece.getColor();
+        Coordinate curr = new Coordinate(startX + 1, startY);
+        boolean nextDiagonal = false;
+        while(checkOnBoard(curr) && !nextDiagonal) {
+            if(!checkOccupied(curr)) available.add(new Coordinate(curr));
+            else {
+                if(checkTakeable(curr, color)) available.add(new Coordinate(curr));
+                nextDiagonal = true;
+            }
+            startX += 1;
+            curr.setXY(startX, startY);
+        }
+        startX = origin.getX() - 1;
+        startY = origin.getY();
+        curr.setXY(startX, startY);
+        nextDiagonal = false;
+        while(checkOnBoard(curr) && !nextDiagonal) {
+            if(!checkOccupied(curr)) available.add(new Coordinate(curr));
+            else {
+                if(checkTakeable(curr, color)) available.add(new Coordinate(curr));
+                nextDiagonal = true;
+            }
+            startX -= 1;
+            curr.setXY(startX, startY);
+        }
+        startX = origin.getX();
+        startY = origin.getY() - 1;
+        curr.setXY(startX, startY);
+        nextDiagonal = false;
+        while(checkOnBoard(curr) && !nextDiagonal) {
+            if(!checkOccupied(curr)) available.add(new Coordinate(curr));
+            else {
+                if(checkTakeable(curr, color)) available.add(new Coordinate(curr));
+                nextDiagonal = true;
+            }
+            startY -= 1;
+            curr.setXY(startX, startY);
+        }
+        startX = origin.getX();
+        startY = origin.getY() + 1;
+        curr.setXY(startX, startY);
+        nextDiagonal = false;
+        while(checkOnBoard(curr) && !nextDiagonal) {
+            if(!checkOccupied(curr)) available.add(new Coordinate(curr));
+            else {
+                if(checkTakeable(curr, color)) available.add(new Coordinate(curr));
+                nextDiagonal = true;
+            }
+            startY += 1;
+            curr.setXY(startX, startY);
+        }
+        return available;
+    }
     private ArrayList<Coordinate> getAvailableMoves(Coordinate origin) {
         ArrayList<Coordinate> available = new ArrayList<Coordinate>();
         int startX = origin.getX();
         int startY = origin.getY();
         Piece piece = board[startX][startY];
         int color = piece.getColor();
-        if(whiteToMove && color != 2) return available;
-        if(!whiteToMove && color != 1) return available;
+        if(whiteToMove && color != WHITE) return available;
+        if(!whiteToMove && color != BLACK) return available;
         int type = piece.getPiece();
         Coordinate curr = new Coordinate(startX, startY);
         switch(type) {
-            case 0: //Empty Spot
+            case EMPTY:
                 break;
-            case 1: //Pawn TODO Enpassant and Promotion
+            case PAWN:  //TODO Enpassant and Promotion
                 curr.setXY(startX, startY + 1);
                 if(!checkOccupied(curr)) {
                     addCheck(available, origin, curr);
@@ -423,7 +423,7 @@ public class Chessboard {
                 curr.setXY(startX - 1, startY + 1);
                 if(checkTakeable(curr, color)) addCheck(available, origin, curr);
                 break;
-            case 2: //Knight
+            case KNIGHT: //Knight
                 curr.setXY(startX + 1, startY + 2);
                 if((!checkOccupied(curr) || checkTakeable(curr, color)) && checkOnBoard(curr)) addCheck(available, origin, curr);
                 curr.setXY(startX + 2, startY + 1);
@@ -441,19 +441,19 @@ public class Chessboard {
                 curr.setXY(startX - 1, startY + 2);
                 if((!checkOccupied(curr) || checkTakeable(curr, color)) && checkOnBoard(curr)) addCheck(available, origin, curr);
                 break;
-            case 3: //Bishop
+            case BISHOP: //Bishop
                 available = checkDiagonals(origin);
                 break;
-            case 4: //Rook
+            case ROOK: //Rook
                 available = checkLaterals(origin);
                 break;
-            case 5: //Queen
+            case QUEEN: //Queen
                 available = checkDiagonals(origin);
                 ArrayList<Coordinate> lateral = checkLaterals(origin);
                 for(Coordinate point : lateral)
                     available.add(new Coordinate(point));
                  break;
-            case 6: //King
+            case KING: //King
                 curr.setXY(startX, startY + 1);
                 if((!checkOccupied(curr) || checkTakeable(curr, color)) && checkOnBoard(curr)) addCheck(available, origin, curr);
                 curr.setXY(startX, startY - 1);
@@ -553,14 +553,14 @@ public class Chessboard {
         Piece piece = board[startX][startY];
         //piece.printPiece();
         int color = piece.getColor();
-        if(whiteToMove && color != 2) return available;
-        if(!whiteToMove && color != 1) return available;
+        if(whiteToMove && color != WHITE) return available;
+        if(!whiteToMove && color != BLACK) return available;
         int type = piece.getPiece();
         Coordinate curr = new Coordinate(startX, startY);
         switch(type) {
-            case 0: //Empty Spot
+            case EMPTY: //Empty Spot
                 break;
-            case 1: //Pawn TODO Enpassant and Promotion
+            case PAWN: //Pawn TODO Enpassant and Promotion
                 curr.setXY(startX, startY + 1);
                 if(!checkOccupied(curr)) {
                     available.add(new Coordinate(curr));
@@ -576,7 +576,7 @@ public class Chessboard {
                 curr.setXY(startX - 1, startY + 1);
                 if(checkTakeable(curr, color)) available.add(new Coordinate(curr));
                 break;
-            case 2: //Knight
+            case KNIGHT: //Knight
                 curr.setXY(startX + 1, startY + 2);
                 if((!checkOccupied(curr) || checkTakeable(curr, color)) && checkOnBoard(curr)) available.add(new Coordinate(curr));
                 curr.setXY(startX + 2, startY + 1);
@@ -594,19 +594,19 @@ public class Chessboard {
                 curr.setXY(startX - 1, startY + 2);
                 if((!checkOccupied(curr) || checkTakeable(curr, color)) && checkOnBoard(curr)) available.add(new Coordinate(curr));
                 break;
-            case 3: //Bishop
+            case BISHOP: //Bishop
                 available = checkDiagonalsWithoutCheck(origin);
                 break;
-            case 4: //Rook
+            case ROOK: //Rook
                 available = checkLateralsWithoutCheck(origin);
                 break;
-            case 5: //Queen
+            case QUEEN: //Queen
                 available = checkDiagonalsWithoutCheck(origin);
                 ArrayList<Coordinate> lateral = checkLateralsWithoutCheck(origin);
                 for(Coordinate point : lateral)
                     available.add(new Coordinate(point));
                 break;
-            case 6: //King
+            case KING: //King
                 curr.setXY(startX, startY + 1);
                 if((!checkOccupied(curr) || checkTakeable(curr, color)) && checkOnBoard(curr)) available.add(new Coordinate(curr));
                 curr.setXY(startX, startY - 1);
@@ -635,7 +635,6 @@ public class Chessboard {
             return getAvailableMovesWithoutCheck(origin);
         }
         int color = piece.getColor();
-        int type = piece.getPiece();
         ArrayList<Coordinate> available = new ArrayList<Coordinate>();
         if(whiteToMove && color != 2) return available;
         if(!whiteToMove && color != 1) return available;
@@ -662,14 +661,14 @@ public class Chessboard {
         boolean functionRotated = false;
         int color;
         if(whiteToMove == false) {
-            color = 1;
+            color = BLACK;
             if(rotated == false) {
                 rotateBoard();
                 functionRotated = true;
             }
         }
-        else color = 2;
-        while(color == 1) {
+        else color = WHITE;
+        while(color == BLACK) {
             if(blackKingMoved || blackShortRookMoved) {
                 canCastle = false;
                 break;
@@ -707,7 +706,7 @@ public class Chessboard {
             board[3][0].setPiece(1, 6);
             break;
         }
-        while(color == 2) {
+        while(color == WHITE) {
             if(whiteKingMoved || whiteShortRookMoved) {
                 canCastle = false;
                 break;
@@ -755,14 +754,14 @@ public class Chessboard {
         boolean functionRotated = false;
         int color;
         if(whiteToMove == false) {
-            color = 1;
+            color = BLACK;
             if(rotated == false) {
                 rotateBoard();
                 functionRotated = true;
             }
         }
-        else color = 2;
-        while(color == 1) {
+        else color = WHITE;
+        while(color == BLACK) {
             if(blackKingMoved || blackLongRookMoved) {
                 canCastle = false;
                 break;
@@ -804,7 +803,7 @@ public class Chessboard {
             board[3][0].setPiece(1, 6);
             break;
         }
-        while(color == 2) {
+        while(color == WHITE) {
             if(whiteKingMoved || whiteLongRookMoved) {
                 canCastle = false;
                 break;
@@ -873,11 +872,11 @@ public class Chessboard {
         board[ax][ay].setPiece(board[bx][by].getColor(), board[bx][by].getPiece());
         board[bx][by].setPiece(tempColor, tempPiece);
     }
-    public void move(String move) {
+    public int move(String move) {
         Coordinate[] moves = translateMove(move);
         if(moves[0].getX() == -1) {
             System.out.println("Wrong format - eg e2e4");
-            return;
+            return -2;
         }
         if(!whiteToMove) {
             rotateBoard();
@@ -885,7 +884,7 @@ public class Chessboard {
         if(searchList(getAvailableMoves(moves[0]), moves[1]) == false) {
             System.out.println("Illegal move - Not in available set");
             if(rotated) rotateBoard();
-            return;
+            return -1;
         }
         if(whiteToMove()) whiteCastled = false;
         else blackCastled = false;
@@ -893,6 +892,10 @@ public class Chessboard {
         int piece = board[moves[0].getX()][moves[0].getY()].getPiece();
         board[moves[0].getX()][moves[0].getY()].setPiece(0,0);
         board[moves[1].getX()][moves[1].getY()].setPiece(color, piece);
+        if(piece == PAWN) {
+            if(moves[1].getY() == 7)
+                board[moves[1].getX()][moves[1].getY()].setPiece(color, QUEEN);
+        }
         if(piece == 6) {
             if(color == 1) blackKingMoved = true;
             if(color == 2) whiteKingMoved = true;
@@ -939,13 +942,13 @@ public class Chessboard {
             rotateBoard();
         }
         whiteToMove = !whiteToMove;
-        return;
+        return 0;
     }
     public boolean checkmate() {
         //TODO Stalemate
         int color;
-        if(whiteToMove) color = 2;
-        else color = 1;
+        if(whiteToMove) color = WHITE;
+        else color = BLACK;
         if(check()) {
             boolean moveFound = false;
             for(int i = 0; i < 8; i++) {
@@ -1007,8 +1010,8 @@ public class Chessboard {
         int kingX = kingLocation.getX();
         int kingY = kingLocation.getY();
 
-        if(whiteToMove) color = 1;
-        else color = 2;
+        if(whiteToMove) color = BLACK;
+        else color = WHITE;
         whiteToMove = !whiteToMove;
         for(int i = 0; i < 8; i++) {
             for(int j = 0; j < 8; j++) {
@@ -1102,7 +1105,6 @@ public class Chessboard {
     private boolean rotated;
     private boolean blackCastled;
     private boolean whiteCastled;
-    private ArrayList<String> legalMoves;
     private final int EMPTY = 0;
     private final int WHITE = 2;
     private final int BLACK = 1;

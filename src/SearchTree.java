@@ -42,21 +42,22 @@ public class SearchTree {
     public SearchTree() {
         evaluator = new Evaluator();
     }
-    public void generateMoveSeconds(Chessboard chessboard, int seconds) {
-        /*root = new TreeNode(new Data(chessboard));
+    /*public void generateMoveSeconds(Chessboard chessboard, int seconds) {
+        root = new TreeNode(new Data(chessboard));
         int bestMove;
         long time = System.currentTimeMillis() + 1000*seconds;
         while(System.currentTimeMillis() ) {
             //generateFullTree(ply);
-        }*/
-    }
-    public void generateMovePly(Chessboard chessboard, int ply) {
+        }
+    }*/
+    public Chessboard generateMovePly(Chessboard chessboard, int ply) {
         root = new TreeNode(new Data(chessboard));
         generateFullTree(root, ply);
         bestMoveIndex = 0;
         alphabeta(root, 100000000, -100000000, ply, 0);
         TreeNode bestMove = root.getChildren().get(bestMoveIndex);
-        bestMove.getData().getBoard().printBoard();
+        //bestMove.getData().getBoard().printBoard();
+        return bestMove.getData().getBoard();
 
     }
     private void generateNextLevel(TreeNode node) {
