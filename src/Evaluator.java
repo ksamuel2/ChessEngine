@@ -4,10 +4,10 @@
 import java.util.ArrayList;
 public class Evaluator {
     public int evaluate(Chessboard chessboard) {
-        /*double positionValue = evaluatePosition(chessboard) + evaluateAttackOnKing(chessboard)
+        double positionValue = evaluatePosition(chessboard) + evaluateAttackOnKing(chessboard)
                 + evaluateMaterial(chessboard) + evaluateCheckmate(chessboard) + evaluateCastling(chessboard)
-                + evaluateMobility(chessboard) + evaluateDoubledPawns(chessboard);*/
-        double positionValue = evaluatePosition(chessboard) + evaluateMaterial(chessboard);
+                + evaluateMobility(chessboard) + evaluateDoubledPawns(chessboard);
+        //double positionValue = evaluatePosition(chessboard) + evaluateMaterial(chessboard);
         return (int) positionValue;
     }
     private double evaluateMaterial(Chessboard chessboard) {

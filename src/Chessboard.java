@@ -490,25 +490,6 @@ public class Chessboard {
         }
         return available;
     }
-    private ArrayList<Coordinate> getAvailableAttackMovesPrivate(Coordinate origin) {
-        int startX = origin.getX();
-        int startY = origin.getY();
-        Piece piece = board[startX][startY];
-        if(piece.getPiece() != 1) {
-            return getAvailableMoves(origin);
-        }
-        int color = piece.getColor();
-        int type = piece.getPiece();
-        ArrayList<Coordinate> available = new ArrayList<Coordinate>();
-        if(whiteToMove && color != 2) return available;
-        if(!whiteToMove && color != 1) return available;
-        Coordinate curr = new Coordinate(startX, startY);
-        curr.setXY(startX + 1, startY + 1);
-        if(checkTakeable(curr, color) && checkOnBoard(curr)) addCheck(available, origin, curr);
-        curr.setXY(startX - 1, startY + 1);
-        if(checkTakeable(curr, color) && checkOnBoard(curr)) addCheck(available, origin, curr);
-        return available;
-    }
     public ArrayList<Coordinate> getAvailableMovesTranslated(Coordinate origin) {
         int color;
         boolean functionColorSwitch = false;
@@ -1047,20 +1028,6 @@ public class Chessboard {
         whiteToMove = !whiteToMove;
         return false;
     }
-    private boolean check(int color) {
-        boolean functionSwitched = false;
-        if(color == 1 && whiteToMove) {
-            whiteToMove = false;
-            functionSwitched = true;
-        }
-        if(color == 2 && !whiteToMove) {
-            whiteToMove = true;
-            functionSwitched = true;
-        }
-        boolean ret = check();
-        if(functionSwitched) whiteToMove = !whiteToMove;
-        return ret;
-    }
     public Coordinate findPiece(int color, int value) {
         for(int i = 0; i < 8; i++) {
             for(int j = 0; j < 8; j++) {
@@ -1135,6 +1102,7 @@ public class Chessboard {
     private boolean rotated;
     private boolean blackCastled;
     private boolean whiteCastled;
+    private ArrayList<String> legalMoves;
     private final int EMPTY = 0;
     private final int WHITE = 2;
     private final int BLACK = 1;

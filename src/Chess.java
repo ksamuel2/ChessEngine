@@ -13,7 +13,7 @@ public class Chess {
             System.out.println("Current Board Position");
             chess.printBoard();
             System.out.println("Computer Generated Move");
-            engine.generateMovePly(chess, 4);
+            engine.generateMovePly(chess, 3);
             String move = scanner.nextLine();
             if(move.equals("exit")) return;
             chess.move(move);

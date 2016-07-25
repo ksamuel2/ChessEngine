@@ -53,7 +53,8 @@ public class SearchTree {
     public void generateMovePly(Chessboard chessboard, int ply) {
         root = new TreeNode(new Data(chessboard));
         generateFullTree(root, ply);
-        alphaBetaMinimax(root, 100000000, -100000000, ply, 0);
+        bestMoveIndex = 0;
+        alphabeta(root, 100000000, -100000000, ply, 0);
         TreeNode bestMove = root.getChildren().get(bestMoveIndex);
         bestMove.getData().getBoard().printBoard();
 
@@ -77,53 +78,49 @@ public class SearchTree {
             generateFullTree(t, ply - 1);
         }
     }
-    private Coordinate alphaBetaMinimax(TreeNode node, int alpha, int beta, int ply, int index) {
-        //System.out.println(evaluator.evaluate(node.getData().getBoard()));
-        if(ply == 0) { //We have reached the specified search depth for the function
-            return new Coordinate(evaluator.evaluate(node.getData().getBoard()), index);
+    public void testTree(TreeNode root) {
+        System.out.println("Root");
+        //root = root.getChildren().get(8).getChildren().get(7);
+        root.getData().getBoard().printBoard();
+        int length = root.getChildren().size();
+        System.out.println(length + " Children Found");
+        for(TreeNode child : root.getChildren()) {
+            child.getData().getBoard().printBoard();
+            System.out.println(evaluator.evaluate(child.getData().getBoard()));
         }
-
-        if(node.getChildren().size() == 0) { //The node we are searching is a leaf node
-            return new Coordinate(evaluator.evaluate(node.getData().getBoard()), index);
-        }
-
-        if(node == root) {
-            bestMoveIndex = 0;
-            if(node.getChildren().size() == 1) {
-                return null;
-            }
-        }
-        if(node.getData().getBoard().whiteToMove()) { //Maximizing Player to Move
-            int indexVal = 0;
+    }
+    public int alphabeta(TreeNode node, int depth, int alpha, int beta, int index) {
+        //Reached Search Depth
+        if(depth == 0) return evaluator.evaluate(node.getData().getBoard());
+        //Leaf Node
+        if(node.getChildren().size() == 0) return evaluator.evaluate(node.getData().getBoard());
+        //Maximizing Player
+        if(node.getData().getBoard().whiteToMove()) {
+            int i = 0;
             for(TreeNode child : node.getChildren()) {
-                Coordinate result = alphaBetaMinimax(child, alpha, beta, ply - 1, indexVal);
-                int positionVal = result.getX();
-                if(positionVal > alpha) {
-                    node.alpha = positionVal;
-                    alpha = positionVal;
-                    if(node == root) {
-                        bestMoveIndex = result.getY();
-                    }
+                int newalpha = alphabeta(child, depth - 1, alpha, beta, i);
+                if(newalpha > alpha) {
+                    alpha = newalpha;
+                    if(node == root) bestMoveIndex = i;
                 }
-                if(alpha >= beta) return new Coordinate(alpha, result.getY());
+                if(beta <= alpha) break;
+                i++;
             }
-            return new Coordinate(alpha, index);
+            return alpha;
         }
-        else { //Minimizing Player to Move
-            int indexVal = 0;
+        //Minimizing Player
+        else {
+            int i = 0;
             for(TreeNode child : node.getChildren()) {
-                Coordinate result = alphaBetaMinimax(child, alpha, beta, ply - 1, indexVal);
-                int positionVal = result.getX();
-                if(positionVal < beta) {
-                    node.beta = positionVal;
-                    beta = positionVal;
-                    if(node == root) {
-                        bestMoveIndex = result.getY();
-                    }
+                int newbeta = alphabeta(child, depth - 1, alpha, beta, i);
+                if(newbeta < beta) {
+                    beta = newbeta;
+                    if(node == root) bestMoveIndex = i;
                 }
-                if(alpha >= beta) return new Coordinate(beta, result.getY());
+                if(beta <= alpha) break;
+                i++;
             }
-            return new Coordinate(beta, index);
+            return beta;
         }
     }
     private TreeNode root;
