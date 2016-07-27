@@ -407,7 +407,7 @@ public class Chessboard {
         switch(type) {
             case EMPTY:
                 break;
-            case PAWN:  //TODO Enpassant and Promotion
+            case PAWN:  //TODO Enpassant
                 curr.setXY(startX, startY + 1);
                 if(!checkOccupied(curr)) {
                     addCheck(available, origin, curr);

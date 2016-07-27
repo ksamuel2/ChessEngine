@@ -9,6 +9,9 @@ public class Chess {
         Scanner scanner = new Scanner(System.in);
         int i = 0;
         SearchTree engine = new SearchTree();
+        System.out.print("Enter the search depth you would like to play against: ");
+        int ply = scanner.nextInt();
+        scanner.nextLine();
         while(!chess.checkmate()) {
             if(i%2 == 0) {
                 chess.printBoard();
@@ -17,7 +20,7 @@ public class Chess {
                 if(chess.move(move) != 0) continue;
             }
             else
-                chess = new Chessboard(engine.generateMovePly(chess, 3));
+                chess = new Chessboard(engine.generateMovePly(chess, ply));
             i++;
         }
         chess.printBoard();

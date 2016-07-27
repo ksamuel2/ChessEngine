@@ -7,10 +7,6 @@ public class SearchTree {
         public TreeNode(Data d) {
             data = new Data(d);
             children  = new ArrayList<TreeNode>();
-            alpha = -10000000;
-            beta = 100000000;
-            evaluated = 0;
-
         }
         public void addChild(TreeNode t) {
             children.add(t);
@@ -21,9 +17,6 @@ public class SearchTree {
         public ArrayList<TreeNode> getChildren() {
             return children;
         }
-        public int alpha;
-        public int beta;
-        public int evaluated;
         private Data data;
         private ArrayList<TreeNode> children;
     }
@@ -42,14 +35,6 @@ public class SearchTree {
     public SearchTree() {
         evaluator = new Evaluator();
     }
-    /*public void generateMoveSeconds(Chessboard chessboard, int seconds) {
-        root = new TreeNode(new Data(chessboard));
-        int bestMove;
-        long time = System.currentTimeMillis() + 1000*seconds;
-        while(System.currentTimeMillis() ) {
-            //generateFullTree(ply);
-        }
-    }*/
     public Chessboard generateMovePly(Chessboard chessboard, int ply) {
         root = new TreeNode(new Data(chessboard));
         generateFullTree(root, ply);
@@ -77,17 +62,6 @@ public class SearchTree {
         generateNextLevel(curr);
         for(TreeNode t : curr.getChildren()) {
             generateFullTree(t, ply - 1);
-        }
-    }
-    public void testTree(TreeNode root) {
-        System.out.println("Root");
-        //root = root.getChildren().get(8).getChildren().get(7);
-        root.getData().getBoard().printBoard();
-        int length = root.getChildren().size();
-        System.out.println(length + " Children Found");
-        for(TreeNode child : root.getChildren()) {
-            child.getData().getBoard().printBoard();
-            System.out.println(evaluator.evaluate(child.getData().getBoard()));
         }
     }
     public int alphabeta(TreeNode node, int depth, int alpha, int beta, int index) {
