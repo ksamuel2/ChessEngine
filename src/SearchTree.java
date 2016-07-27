@@ -41,7 +41,6 @@ public class SearchTree {
         bestMoveIndex = 0;
         alphabeta(root, 100000000, -100000000, ply, 0);
         TreeNode bestMove = root.getChildren().get(bestMoveIndex);
-        //bestMove.getData().getBoard().printBoard();
         return bestMove.getData().getBoard();
 
     }
